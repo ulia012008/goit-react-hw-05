@@ -11,10 +11,10 @@ export default function MovieReviews({ id }) {
   return (
     <ul>
       {reviews.length > 0 ? (
-        reviews.map((r) => (
-          <li key={r.id}>
-            <h4>{r.author}</h4>
-            <p>{r.content}</p>
+        reviews.map(({ id, author, content }) => (
+          <li key={id}>
+            <h4>{author}</h4>
+            <p>{content}</p>
           </li>
         ))
       ) : (
