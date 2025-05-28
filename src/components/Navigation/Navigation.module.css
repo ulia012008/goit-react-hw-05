@@ -1,0 +1,15 @@
+.nav {
+    padding: 1rem;
+    background: #261c1c;
+}
+
+.link {
+    margin-right: 1rem;
+    color: rgb(207, 194, 194);
+    text-decoration: none;
+}
+
+.link.active {
+    font-weight: bold;
+    color: green;
+}
