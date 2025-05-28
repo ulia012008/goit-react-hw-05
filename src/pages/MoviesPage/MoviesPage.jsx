@@ -90,7 +90,6 @@ export default function MoviesPage() {
       ) : (
         <MovieList movies={movies} />
       )}
-      <MovieList movies={movies} />
     </div>
   );
 }
