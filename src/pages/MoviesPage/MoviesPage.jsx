@@ -5,6 +5,7 @@ import MovieList from "../../components/MovieList/MovieList";
 import CSS from "./MoviesPage.module.css";
 
 export default function MoviesPage() {
+  const [isLoading, setIsLoading] = useState(false);
   const [movies, setMovies] = useState([]);
   const [params, setParams] = useSearchParams();
   const query = params.get("query") ?? "";
@@ -16,27 +17,31 @@ export default function MoviesPage() {
   useEffect(() => {
     if (!query) return;
 
+    setIsLoading(true);
+    setErrorMessage("");
+    setNotFound(false);
+
     searchMovies(query)
       .then((data) => {
         setMovies(data);
         if (data.length === 0) {
           setNotFound(true);
-          setErrorMessage("");
-          // Коли не знайдено — завантажуємо рекомендації
           fetchTrendingMovies()
             .then((trending) => {
               setRecommendations(shuffleArray(trending).slice(0, 5));
             })
-            .catch(console.error);
+            .catch(() => {
+              setErrorMessage("Failed to load recommendations.");
+            });
         } else {
-          setNotFound(false);
           setRecommendations([]);
-          setErrorMessage("");
         }
       })
-      .catch((err) => {
-        console.error(err);
+      .catch(() => {
         setErrorMessage("Something went wrong. Please try again later.");
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [query]);
 
@@ -67,11 +72,13 @@ export default function MoviesPage() {
           onChange={(e) => {
             setInputValue(e.target.value);
             if (errorMessage) setErrorMessage("");
+            if (notFound) setNotFound(false);
           }}
           placeholder="Search movies"
         />
         <button type="submit">Search</button>
       </form>
+
       {errorMessage && (
         <p
           className={CSS.message}
@@ -80,7 +87,10 @@ export default function MoviesPage() {
           {errorMessage}
         </p>
       )}
-      {notFound ? (
+
+      {isLoading && <p className={CSS.message}>Loading...</p>}
+
+      {!isLoading && notFound ? (
         <>
           <p className={CSS.message}>
             No movies found for "{query}". Here are some recommendations:
