@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   useParams,
   useNavigate,
@@ -13,6 +13,7 @@ export default function MovieDetailsPage() {
   const [movie, setMovie] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const backLinkRef = useRef(location.state?.from || "/");
 
   useEffect(() => {
     getMovieDetails(movieId).then(setMovie);
@@ -24,7 +25,7 @@ export default function MovieDetailsPage() {
 
   return (
     <div>
-      <button onClick={() => navigate(backLink)}>← Go Back</button>
+      <button onClick={() => navigate(backLinkRef.current)}>← Go Back</button>
       <h1>{movie.title}</h1>
       <img
         src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -37,12 +38,18 @@ export default function MovieDetailsPage() {
       <h3>Additional Information</h3>
       <ul>
         <li>
-          <Link to={`/movies/${movieId}/cast`} state={{ from: backLink }}>
+          <Link
+            to={`/movies/${movieId}/cast`}
+            state={{ from: backLinkRef.current }}
+          >
             Cast
           </Link>
         </li>
         <li>
-          <Link to={`/movies/${movieId}/reviews`} state={{ from: backLink }}>
+          <Link
+            to={`/movies/${movieId}/reviews`}
+            state={{ from: backLinkRef.current }}
+          >
             Reviews
           </Link>
         </li>
