@@ -4,14 +4,9 @@ import {
   useNavigate,
   useLocation,
   Link,
-  Routes,
-  Route,
+  Outlet,
 } from "react-router-dom";
 import { getMovieDetails } from "../../api/tmdb";
-import { getMovieCredits } from "../../api/tmdb";
-import { getMovieReviews } from "../../api/tmdb";
-import MovieCast from "../../components/MovieCast/MovieCast";
-import MovieReviews from "../../components/MovieReviews/MovieReviews";
 
 export default function MovieDetailsPage() {
   const { movieId } = useParams();
@@ -42,21 +37,18 @@ export default function MovieDetailsPage() {
       <h3>Additional Information</h3>
       <ul>
         <li>
-          <Link to="cast" state={{ from: backLink }}>
+          <Link to={`/movies/${movieId}/cast`} state={{ from: backLink }}>
             Cast
           </Link>
         </li>
         <li>
-          <Link to="reviews" state={{ from: backLink }}>
+          <Link to={`/movies/${movieId}/reviews`} state={{ from: backLink }}>
             Reviews
           </Link>
         </li>
       </ul>
 
-      <Routes>
-        <Route path="cast" element={<MovieCast id={movieId} />} />
-        <Route path="reviews" element={<MovieReviews id={movieId} />} />
-      </Routes>
+      <Outlet />
     </div>
   );
 }

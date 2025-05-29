@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { getMovieCredits } from "../../api/tmdb";
+import { useParams } from "react-router-dom";
 
 export default function MovieCast({ id }) {
+  const { movieId } = useParams();
   const [cast, setCast] = useState([]);
 
   useEffect(() => {
-    getMovieCredits(id).then(setCast);
-  }, [id]);
+    if (!movieId) return;
+    getMovieCredits(movieId).then(setCast).catch(console.error);
+  }, [movieId]);
 
   return (
     <ul>
